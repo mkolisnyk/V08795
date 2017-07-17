@@ -17,16 +17,16 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 
 import com.sample.framework.Configuration;
+import com.sample.framework.Driver;
 
 @RunWith(Parameterized.class)
 public class SampleTest {
-
-	private WebDriver driver;
 
 	private String destination;
 	private boolean isBusiness;
@@ -44,6 +44,7 @@ public class SampleTest {
         cap.setCapability("platformVersion", Configuration.get("platformVersion"));
         cap.setCapability("platformName", "Android");
         cap.setCapability("app", new File(Configuration.get("app_path")).getAbsolutePath());
+        //cap.setCapability("udid", Configuration.get("udid"));
         cap.setCapability("deviceName", Configuration.get("deviceName"));
         cap.setCapability("commandTimeout", Configuration.get("commandTimeout"));
         cap.setCapability("appActivity", Configuration.get("appActivity"));
@@ -51,12 +52,13 @@ public class SampleTest {
         cap.setCapability("appWaitActivity", Configuration.get("appActivity"));
         cap.setCapability("appWaitPackage", Configuration.get("appPackage"));
         cap.setCapability("fullReset", true);
-        driver = new AndroidDriver<WebElement>(new URL(Configuration.get("driver_url")), cap);
+        WebDriver driver = new AndroidDriver<WebElement>(new URL(Configuration.get("driver_url")), cap);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        Driver.add(driver);
 	}
 	@After
 	public void tearDown() {
-		driver.quit();
+		Driver.current().quit();
 	}
 	
 	@Parameters
@@ -70,19 +72,19 @@ public class SampleTest {
 	
 	@Test
 	public void testSample() throws Exception {
-		driver.findElement(By.id("com.booking:id/btn_start_search")).click();
-		driver.findElement(By.id("com.booking:id/search_searchInput")).click();
-		driver.findElement(By.id("com.booking:id/disam_search")).sendKeys(this.destination);
+		Driver.current().findElement(By.id("com.booking:id/btn_start_search")).click();
+		Driver.current().findElement(By.id("com.booking:id/search_searchInput")).click();
+		Driver.current().findElement(By.id("com.booking:id/disam_search")).sendKeys(this.destination);
 		Thread.sleep(3000);
-		driver.findElements(By.id("com.booking:id/disam_list_root")).get(0).click();
-		driver.findElement(By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]")).click();
+		Driver.current().findElements(By.id("com.booking:id/disam_list_root")).get(0).click();
+		Driver.current().findElement(By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]")).click();
 		if (this.isBusiness) {
-			driver.findElement(By.id("com.booking:id/business_purpose_business")).click();
+			Driver.current().findElement(By.id("com.booking:id/business_purpose_business")).click();
 		} else {
-			driver.findElement(By.id("com.booking:id/business_purpose_leisure")).click();
+			Driver.current().findElement(By.id("com.booking:id/business_purpose_leisure")).click();
 		}
-		driver.findElement(By.id("com.booking:id/search_search")).click();
-		String actualTitle = driver.findElement(By.id("com.booking:id/subtitle_layout_text")).getText();
+		Driver.current().findElement(By.id("com.booking:id/search_search")).click();
+		String actualTitle = Driver.current().findElement(By.id("com.booking:id/subtitle_layout_text")).getText();
 		Assert.assertEquals(actualTitle, this.destination);
 	}
 }

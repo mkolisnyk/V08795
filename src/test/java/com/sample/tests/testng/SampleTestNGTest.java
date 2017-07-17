@@ -18,10 +18,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.sample.framework.Configuration;
+import com.sample.framework.Driver;
 
 public class SampleTestNGTest {
-
-	private WebDriver driver;
 
 	@BeforeMethod(alwaysRun = true)
 	public void setUp() throws Exception {
@@ -31,6 +30,7 @@ public class SampleTestNGTest {
         cap.setCapability("platformVersion", Configuration.get("platformVersion"));
         cap.setCapability("platformName", "Android");
         cap.setCapability("app", new File(Configuration.get("app_path")).getAbsolutePath());
+        cap.setCapability("udid", Configuration.get("udid"));
         cap.setCapability("deviceName", Configuration.get("deviceName"));
         cap.setCapability("commandTimeout", Configuration.get("commandTimeout"));
         cap.setCapability("appActivity", Configuration.get("appActivity"));
@@ -38,12 +38,14 @@ public class SampleTestNGTest {
         cap.setCapability("appWaitActivity", Configuration.get("appActivity"));
         cap.setCapability("appWaitPackage", Configuration.get("appPackage"));
         cap.setCapability("fullReset", true);
-        driver = new AndroidDriver<WebElement>(new URL(Configuration.get("driver_url")), cap);
+        WebDriver driver = new AndroidDriver<WebElement>(new URL(Configuration.get("driver_url")), cap);
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        
+        Driver.add(driver);
 	}
 	@AfterMethod(alwaysRun = true)
 	public void tearDown() {
-		driver.quit();
+		Driver.current().quit();
 	}
 
 	@DataProvider(name = "source")
@@ -56,19 +58,19 @@ public class SampleTestNGTest {
 	
 	@Test(dataProvider="source")
 	public void testSample(String destination, boolean isBusiness) throws Exception {
-		driver.findElement(By.id("com.booking:id/btn_start_search")).click();
-		driver.findElement(By.id("com.booking:id/search_searchInput")).click();
-		driver.findElement(By.id("com.booking:id/disam_search")).sendKeys(destination);
+		Driver.current().findElement(By.id("com.booking:id/btn_start_search")).click();
+		Driver.current().findElement(By.id("com.booking:id/search_searchInput")).click();
+		Driver.current().findElement(By.id("com.booking:id/disam_search")).sendKeys(destination);
 		Thread.sleep(3000);
-		driver.findElements(By.id("com.booking:id/disam_list_root")).get(0).click();
-		driver.findElement(By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]")).click();
+		Driver.current().findElements(By.id("com.booking:id/disam_list_root")).get(0).click();
+		Driver.current().findElement(By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]")).click();
 		if (isBusiness) {
-			driver.findElement(By.id("com.booking:id/business_purpose_business")).click();
+			Driver.current().findElement(By.id("com.booking:id/business_purpose_business")).click();
 		} else {
-			driver.findElement(By.id("com.booking:id/business_purpose_leisure")).click();
+			Driver.current().findElement(By.id("com.booking:id/business_purpose_leisure")).click();
 		}
-		driver.findElement(By.id("com.booking:id/search_search")).click();
-		String actualTitle = driver.findElement(By.id("com.booking:id/subtitle_layout_text")).getText();
+		Driver.current().findElement(By.id("com.booking:id/search_search")).click();
+		String actualTitle = Driver.current().findElement(By.id("com.booking:id/subtitle_layout_text")).getText();
 		Assert.assertEquals(actualTitle, destination);
 	}
 }
