@@ -15,23 +15,26 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import com.sample.framework.Configuration;
+
 public class SampleTestNGTest {
 
 	private WebDriver driver;
 
 	@BeforeTest
 	public void setUp() throws Exception {
+		Configuration.load();
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability(CapabilityType.BROWSER_NAME, "");
-        cap.setCapability("platformVersion", "4.4");
+        cap.setCapability("platformVersion", Configuration.get("platformVersion"));
         cap.setCapability("platformName", "Android");
-        cap.setCapability("app", new File("./base.apk").getAbsolutePath());
-        cap.setCapability("deviceName", "Any");
-        cap.setCapability("commandTimeout", "60");
-        cap.setCapability("appActivity", ".activity.OnboardingActivity");
-        cap.setCapability("appPackage", "com.booking");
-        cap.setCapability("appWaitActivity", ".activity.OnboardingActivity");
-        cap.setCapability("appWaitPackage", "com.booking");
+        cap.setCapability("app", new File(Configuration.get("app_path")).getAbsolutePath());
+        cap.setCapability("deviceName", Configuration.get("deviceName"));
+        cap.setCapability("commandTimeout", Configuration.get("commandTimeout"));
+        cap.setCapability("appActivity", Configuration.get("appActivity"));
+        cap.setCapability("appPackage", Configuration.get("appPackage"));
+        cap.setCapability("appWaitActivity", Configuration.get("appActivity"));
+        cap.setCapability("appWaitPackage", Configuration.get("appPackage"));
         cap.setCapability("fullReset", true);
         driver = new AndroidDriver<WebElement>(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 	}
