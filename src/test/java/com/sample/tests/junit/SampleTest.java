@@ -17,13 +17,14 @@ import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 
 import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
+import com.sample.framework.ui.controls.Control;
+import com.sample.framework.ui.controls.Edit;
 
 @RunWith(Parameterized.class)
 public class SampleTest {
@@ -72,19 +73,30 @@ public class SampleTest {
 	
 	@Test
 	public void testSample() throws Exception {
-		Driver.current().findElement(By.id("com.booking:id/btn_start_search")).click();
-		Driver.current().findElement(By.id("com.booking:id/search_searchInput")).click();
-		Driver.current().findElement(By.id("com.booking:id/disam_search")).sendKeys(this.destination);
+	    Control buttonStartSearch = new Control(Driver.current(), By.id("com.booking:id/btn_start_search"));
+	    Control buttonDestination = new Control(Driver.current(), By.id("com.booking:id/search_searchInput"));
+	    Edit editDestinationInput = new Edit(Driver.current(), By.id("com.booking:id/disam_search"));
+	    Control itemDestinationResult = new Control(Driver.current(), By.id("com.booking:id/disam_list_root"));
+	    Control buttonTodaysDate = new Control(Driver.current(),
+	    		By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]"));
+	    Control radioBusiness = new Control(Driver.current(), By.id("com.booking:id/business_purpose_business"));
+	    Control radioLeisure = new Control(Driver.current(), By.id("com.booking:id/business_purpose_leisure"));
+	    Control buttonSearch = new Control(Driver.current(), By.id("com.booking:id/search_search"));
+	    Control textSubTitle = new Control(Driver.current(), By.id("com.booking:id/subtitle_layout_text"));
+	    
+	    buttonStartSearch.click();
+	    buttonDestination.click();
+	    editDestinationInput.setText(this.destination);
 		Thread.sleep(3000);
-		Driver.current().findElements(By.id("com.booking:id/disam_list_root")).get(0).click();
-		Driver.current().findElement(By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]")).click();
+		itemDestinationResult.element(0).click();
+		buttonTodaysDate.click();
 		if (this.isBusiness) {
-			Driver.current().findElement(By.id("com.booking:id/business_purpose_business")).click();
+			radioBusiness.click();
 		} else {
-			Driver.current().findElement(By.id("com.booking:id/business_purpose_leisure")).click();
+			radioLeisure.click();
 		}
-		Driver.current().findElement(By.id("com.booking:id/search_search")).click();
-		String actualTitle = Driver.current().findElement(By.id("com.booking:id/subtitle_layout_text")).getText();
+		buttonSearch.click();
+		String actualTitle = textSubTitle.getText();
 		Assert.assertEquals(actualTitle, this.destination);
 	}
 }

@@ -19,6 +19,8 @@ import org.testng.annotations.Test;
 
 import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
+import com.sample.framework.ui.controls.Control;
+import com.sample.framework.ui.controls.Edit;
 
 public class SampleTestNGTest {
 
@@ -58,19 +60,30 @@ public class SampleTestNGTest {
 	
 	@Test(dataProvider="source")
 	public void testSample(String destination, boolean isBusiness) throws Exception {
-		Driver.current().findElement(By.id("com.booking:id/btn_start_search")).click();
-		Driver.current().findElement(By.id("com.booking:id/search_searchInput")).click();
-		Driver.current().findElement(By.id("com.booking:id/disam_search")).sendKeys(destination);
+	    Control buttonStartSearch = new Control(Driver.current(), By.id("com.booking:id/btn_start_search"));
+	    Control buttonDestination = new Control(Driver.current(), By.id("com.booking:id/search_searchInput"));
+	    Edit editDestinationInput = new Edit(Driver.current(), By.id("com.booking:id/disam_search"));
+	    Control itemDestinationResult = new Control(Driver.current(), By.id("com.booking:id/disam_list_root"));
+	    Control buttonTodaysDate = new Control(Driver.current(),
+	    		By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]"));
+	    Control radioBusiness = new Control(Driver.current(), By.id("com.booking:id/business_purpose_business"));
+	    Control radioLeisure = new Control(Driver.current(), By.id("com.booking:id/business_purpose_leisure"));
+	    Control buttonSearch = new Control(Driver.current(), By.id("com.booking:id/search_search"));
+	    Control textSubTitle = new Control(Driver.current(), By.id("com.booking:id/subtitle_layout_text"));
+	    
+	    buttonStartSearch.click();
+	    buttonDestination.click();
+	    editDestinationInput.setText(destination);
 		Thread.sleep(3000);
-		Driver.current().findElements(By.id("com.booking:id/disam_list_root")).get(0).click();
-		Driver.current().findElement(By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]")).click();
+		itemDestinationResult.element(0).click();
+		buttonTodaysDate.click();
 		if (isBusiness) {
-			Driver.current().findElement(By.id("com.booking:id/business_purpose_business")).click();
+			radioBusiness.click();
 		} else {
-			Driver.current().findElement(By.id("com.booking:id/business_purpose_leisure")).click();
+			radioLeisure.click();
 		}
-		Driver.current().findElement(By.id("com.booking:id/search_search")).click();
-		String actualTitle = Driver.current().findElement(By.id("com.booking:id/subtitle_layout_text")).getText();
+		buttonSearch.click();
+		String actualTitle = textSubTitle.getText();
 		Assert.assertEquals(actualTitle, destination);
 	}
 }

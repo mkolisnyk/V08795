@@ -51,4 +51,11 @@ public final class Configuration {
 			System.out.println(String.format("%s=%s", entry.getKey(), entry.getValue()));
 		}
 	}
+	public static long timeout() {
+	    String value = Configuration.get("timeout");
+	    if (value == null || value.trim().equals("")) {
+	        return 60L;
+	    }
+	    return Long.parseLong(value.trim());
+	}
 }
