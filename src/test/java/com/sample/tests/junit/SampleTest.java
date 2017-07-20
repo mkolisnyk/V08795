@@ -25,6 +25,10 @@ import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
 import com.sample.framework.ui.controls.Control;
 import com.sample.framework.ui.controls.Edit;
+import com.sample.tests.pages.DestinationLookupPage;
+import com.sample.tests.pages.LandingPage;
+import com.sample.tests.pages.SearchPage;
+import com.sample.tests.pages.SearchResultsPage;
 
 @RunWith(Parameterized.class)
 public class SampleTest {
@@ -73,30 +77,27 @@ public class SampleTest {
 	
 	@Test
 	public void testSample() throws Exception {
-	    Control buttonStartSearch = new Control(Driver.current(), By.id("com.booking:id/btn_start_search"));
-	    Control buttonDestination = new Control(Driver.current(), By.id("com.booking:id/search_searchInput"));
-	    Edit editDestinationInput = new Edit(Driver.current(), By.id("com.booking:id/disam_search"));
-	    Control itemDestinationResult = new Control(Driver.current(), By.id("com.booking:id/disam_list_root"));
-	    Control buttonTodaysDate = new Control(Driver.current(),
-	    		By.xpath("(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]"));
-	    Control radioBusiness = new Control(Driver.current(), By.id("com.booking:id/business_purpose_business"));
-	    Control radioLeisure = new Control(Driver.current(), By.id("com.booking:id/business_purpose_leisure"));
-	    Control buttonSearch = new Control(Driver.current(), By.id("com.booking:id/search_search"));
-	    Control textSubTitle = new Control(Driver.current(), By.id("com.booking:id/subtitle_layout_text"));
+	    LandingPage landingPage = new LandingPage(Driver.current());
+	    landingPage.buttonStartSearch.click();
 	    
-	    buttonStartSearch.click();
-	    buttonDestination.click();
-	    editDestinationInput.setText(this.destination);
-		Thread.sleep(3000);
-		itemDestinationResult.element(0).click();
-		buttonTodaysDate.click();
+	    SearchPage searchPage = new SearchPage(Driver.current());
+	    searchPage.buttonDestination.click();
+	    
+	    DestinationLookupPage destinationLookupPage = new DestinationLookupPage(Driver.current());
+	    destinationLookupPage.editDestinationInput.setText(destination);
+	    Thread.sleep(3000);
+	    destinationLookupPage.itemDestinationResult.element(0).click();
+	    
+	    searchPage.buttonTodaysDate.click();
+
 		if (this.isBusiness) {
-			radioBusiness.click();
+			searchPage.radioBusiness.click();
 		} else {
-			radioLeisure.click();
+			searchPage.radioLeisure.click();
 		}
-		buttonSearch.click();
-		String actualTitle = textSubTitle.getText();
+		searchPage.buttonSearch.click();
+		SearchResultsPage searchResultsPage = new SearchResultsPage(Driver.current());
+		String actualTitle = searchResultsPage.textSubTitle.getText();
 		Assert.assertEquals(actualTitle, this.destination);
 	}
 }
