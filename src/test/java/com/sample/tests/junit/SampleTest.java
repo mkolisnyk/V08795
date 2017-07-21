@@ -95,5 +95,6 @@ public class SampleTest {
 		SearchResultsPage searchResultsPage = searchPage.buttonSearch.click(SearchResultsPage.class);
 		String actualTitle = searchResultsPage.textSubTitle.getText();
 		Assert.assertEquals(actualTitle, this.destination);
+		searchResultsPage.captureScreenShot("./build/sample-" + destination + ".png");
 	}
 }

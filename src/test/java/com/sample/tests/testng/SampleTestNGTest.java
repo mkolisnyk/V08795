@@ -82,5 +82,6 @@ public class SampleTestNGTest {
 		SearchResultsPage searchResultsPage = searchPage.buttonSearch.click(SearchResultsPage.class);
 		String actualTitle = searchResultsPage.textSubTitle.getText();
 		Assert.assertEquals(actualTitle, destination);
+		searchResultsPage.captureScreenShot("./build/sample-" + destination + "-testng.png");
 	}
 }
