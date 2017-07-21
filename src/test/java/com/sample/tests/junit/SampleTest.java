@@ -23,6 +23,7 @@ import org.testng.Assert;
 
 import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
+import com.sample.framework.ui.PageFactory;
 import com.sample.framework.ui.controls.Control;
 import com.sample.framework.ui.controls.Edit;
 import com.sample.tests.pages.DestinationLookupPage;
@@ -77,13 +78,9 @@ public class SampleTest {
 	
 	@Test
 	public void testSample() throws Exception {
-	    LandingPage landingPage = new LandingPage(Driver.current());
-	    landingPage.buttonStartSearch.click();
-	    
-	    SearchPage searchPage = new SearchPage(Driver.current());
-	    searchPage.buttonDestination.click();
-	    
-	    DestinationLookupPage destinationLookupPage = new DestinationLookupPage(Driver.current());
+	    LandingPage landingPage = PageFactory.init(Driver.current(), LandingPage.class);
+	    SearchPage searchPage = landingPage.buttonStartSearch.click(SearchPage.class);
+	    DestinationLookupPage destinationLookupPage = searchPage.buttonDestination.click(DestinationLookupPage.class);
 	    destinationLookupPage.editDestinationInput.setText(destination);
 	    Thread.sleep(3000);
 	    destinationLookupPage.itemDestinationResult.element(0).click();
@@ -95,8 +92,7 @@ public class SampleTest {
 		} else {
 			searchPage.radioLeisure.click();
 		}
-		searchPage.buttonSearch.click();
-		SearchResultsPage searchResultsPage = new SearchResultsPage(Driver.current());
+		SearchResultsPage searchResultsPage = searchPage.buttonSearch.click(SearchResultsPage.class);
 		String actualTitle = searchResultsPage.textSubTitle.getText();
 		Assert.assertEquals(actualTitle, this.destination);
 	}
