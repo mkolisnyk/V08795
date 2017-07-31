@@ -58,4 +58,7 @@ public final class Configuration {
 	    }
 	    return Long.parseLong(value.trim());
 	}
+	public static Platform platform() {
+	    return Platform.fromString(get("platform"));
+	}
 }

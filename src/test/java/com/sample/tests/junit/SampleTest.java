@@ -32,7 +32,7 @@ import com.sample.tests.pages.SearchPage;
 import com.sample.tests.pages.SearchResultsPage;
 
 @RunWith(Parameterized.class)
-public class SampleTest {
+public class SampleTest extends TestCommon {
 
 	private String destination;
 	private boolean isBusiness;
@@ -41,30 +41,6 @@ public class SampleTest {
 		super();
 		this.destination = destination;
 		this.isBusiness = isBusiness;
-	}
-	@Before
-	public void setUp() throws Exception {
-		Configuration.load();
-        DesiredCapabilities cap = new DesiredCapabilities();
-        cap.setCapability(CapabilityType.BROWSER_NAME, "");
-        cap.setCapability("platformVersion", Configuration.get("platformVersion"));
-        cap.setCapability("platformName", "Android");
-        cap.setCapability("app", new File(Configuration.get("app_path")).getAbsolutePath());
-        //cap.setCapability("udid", Configuration.get("udid"));
-        cap.setCapability("deviceName", Configuration.get("deviceName"));
-        cap.setCapability("commandTimeout", Configuration.get("commandTimeout"));
-        cap.setCapability("appActivity", Configuration.get("appActivity"));
-        cap.setCapability("appPackage", Configuration.get("appPackage"));
-        cap.setCapability("appWaitActivity", Configuration.get("appActivity"));
-        cap.setCapability("appWaitPackage", Configuration.get("appPackage"));
-        cap.setCapability("fullReset", true);
-        WebDriver driver = new AndroidDriver<WebElement>(new URL(Configuration.get("driver_url")), cap);
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        Driver.add(driver);
-	}
-	@After
-	public void tearDown() {
-		Driver.current().quit();
 	}
 	
 	@Parameters
