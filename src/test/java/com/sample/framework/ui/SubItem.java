@@ -7,12 +7,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.sample.framework.Platform;
+import com.sample.framework.ui.controls.Control;
+
 
 @Target(ElementType.FIELD)
-@Repeatable(FindByList.class)
+@Repeatable(SubItems.class)
 @Retention(value = RetentionPolicy.RUNTIME)
-public @interface FindBy {
+public @interface SubItem {
+    String name();
     String locator();
     Platform platform() default Platform.ANY;
-    String itemLocator() default "";
+    Class<? extends Control> controlType() default Control.class;
 }
