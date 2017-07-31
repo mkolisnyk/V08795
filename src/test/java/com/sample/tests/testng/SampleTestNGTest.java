@@ -67,7 +67,7 @@ public class SampleTestNGTest {
 	public void testSample(String destination, boolean isBusiness) throws Exception {
 	    LandingPage landingPage = PageFactory.init(Driver.current(), LandingPage.class);
 	    SearchPage searchPage = landingPage.buttonStartSearch.click(SearchPage.class);
-	    DestinationLookupPage destinationLookupPage = searchPage.buttonDestination.click(DestinationLookupPage.class);
+	    DestinationLookupPage destinationLookupPage = searchPage.editDestination.click(DestinationLookupPage.class);
 	    destinationLookupPage.editDestinationInput.setText(destination);
 	    Thread.sleep(3000);
 	    destinationLookupPage.itemDestinationResult.element(0).click();

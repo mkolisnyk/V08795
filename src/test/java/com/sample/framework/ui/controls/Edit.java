@@ -11,7 +11,7 @@ public class Edit extends Control {
         super(parentValue, locatorValue);
     }
 
-    public void setText(String value) {
+    public void setText(String value) throws Exception {
         this.click();
         this.element().clear();
         this.element().sendKeys(value);

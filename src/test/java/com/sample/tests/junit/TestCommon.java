@@ -15,8 +15,12 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
+import com.sample.framework.ui.PageFactory;
+import com.sample.tests.pages.LandingPage;
+import com.sample.tests.pages.SearchPage;
 
 public class TestCommon {
+    public SearchPage searchPage;
 
 	public TestCommon() {
 		// TODO Auto-generated constructor stub
@@ -44,6 +48,12 @@ public class TestCommon {
         if (Configuration.platform().isWeb()) {
         		Driver.current().get(Configuration.get("url"));
         }
+		if (Configuration.platform().isWeb()) {
+			searchPage = PageFactory.init(Driver.current(), SearchPage.class);
+		} else {
+		    LandingPage landingPage = PageFactory.init(Driver.current(), LandingPage.class);
+		    searchPage = landingPage.buttonStartSearch.click(SearchPage.class);
+		}
 	}
 	@After
 	public void tearDown() {

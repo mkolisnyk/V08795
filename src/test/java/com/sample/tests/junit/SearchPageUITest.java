@@ -24,15 +24,8 @@ public class SearchPageUITest extends TestCommon {
 
     @Test
     public void testVerifyUIOnSearchPage() throws Exception {
-    		SearchPage searchPage;
-    		if (Configuration.platform().isWeb()) {
-    			searchPage = PageFactory.init(Driver.current(), SearchPage.class);
-    		} else {
-    		    LandingPage landingPage = PageFactory.init(Driver.current(), LandingPage.class);
-    		    searchPage = landingPage.buttonStartSearch.click(SearchPage.class);
-    		}
-
-	    Assert.assertTrue(searchPage.buttonDestination.exists());
+    		
+	    Assert.assertTrue(searchPage.editDestination.exists());
         Assert.assertTrue(searchPage.radioBusiness.exists());
         Assert.assertTrue(searchPage.radioLeisure.exists());
         Assert.assertTrue(searchPage.buttonSearch.exists());
