@@ -50,7 +50,7 @@ public class SampleTest extends TestCommon {
         return Arrays.asList(
             new Object[][] {
             		{"Leeds", true, "Hilton Leeds" },
-//            		{"Manchester", false, "Holiday Inn Express"},
+            		{"Manchester", false, "Holiday Inn Express"},
             });
     }
 	
