@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.openqa.selenium.WebDriver;
 
+import com.sample.framework.Configuration;
 import com.sample.framework.ui.FindBy;
 import com.sample.framework.ui.Page;
 import com.sample.framework.ui.controls.Control;
@@ -34,7 +35,7 @@ public class PlayStorePage extends Page {
 
     @Override
     public Page navigate() {
-        SystemUtils.openDeepLink("market://details?id=com.thetrainline");
+        SystemUtils.openDeepLink("market://details?id=" + Configuration.get("appPackage"));
         return this;
     }
 }
