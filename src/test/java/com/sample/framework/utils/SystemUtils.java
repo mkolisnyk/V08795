@@ -63,11 +63,11 @@ public final class SystemUtils {
             cmdArray = new String[] {
                     getADBPath(), "-s",
                     deviceId, "shell", "pm", "clear",
-                    Configuration.get("app_package") };
+                    Configuration.get("appPackage") };
         } else {
             cmdArray = new String[] {
                     getADBPath(),
-                    "shell", "pm", "clear", Configuration.get("app_package") };
+                    "shell", "pm", "clear", Configuration.get("appPackage") };
         }
         runCommand(cmdArray);
     }
@@ -100,6 +100,44 @@ public final class SystemUtils {
             cmdArray = new String[] {
                     getADBPath(),
                     "shell", "am", "start", url };
+        }
+        runCommand(cmdArray);
+    }
+    private static void sendKeyEvent(String key) {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+        if (!StringUtils.isBlank(deviceId)) {
+            cmdArray = new String[] {
+                    getADBPath(), "-s",
+                    deviceId, "shell", "input", "keyevent",
+                    key };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "shell", "input", "keyevent", key };
+        }
+        runCommand(cmdArray);
+    }
+    // shell input keyevent KEYCODE_APP_SWITCH
+    public static void switchApp() {
+        sendKeyEvent("KEYCODE_APP_SWITCH");
+    }
+    public static void navigateBack() {
+        sendKeyEvent("KEYCODE_BACK");
+    }
+    public static void killApp() {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+        if (!StringUtils.isBlank(deviceId)) {
+            cmdArray = new String[] {
+                    getADBPath(), "-s",
+                    deviceId, "shell", "am", "kill", "--user",
+                    "all", Configuration.get("appPackage") };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "shell", "am", "kill", "--user", "all",
+                    Configuration.get("appPackage") };
         }
         runCommand(cmdArray);
     }
