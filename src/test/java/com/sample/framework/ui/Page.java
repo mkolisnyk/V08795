@@ -184,4 +184,11 @@ public class Page {
     public boolean scrollTo(String text) {
         return scrollTo(text, ScrollTo.TOP_BOTTOM);
     }
+    
+    public void hideKeyboard() {
+        try {
+            ((AppiumDriver) this.getDriver()).hideKeyboard();
+        } catch (Exception e) {
+        }
+    }
 }

@@ -60,6 +60,9 @@ public class SampleTest extends TestCommon {
 	    
 	    searchPage.buttonTodaysDate.click();
 
+	    long checkin = Long.parseLong(searchPage.dateCheckin.getValue());
+	    long checkout = Long.parseLong(searchPage.dateCheckout.getValue());
+	    Assert.assertEquals(checkout - checkin, 24 * 60 * 60 * 1000);
 		if (this.isBusiness) {
 			searchPage.radioBusiness.click();
 		} else {
@@ -69,7 +72,7 @@ public class SampleTest extends TestCommon {
 		String actualTitle = searchResultsPage.textSubTitle.getText();
 		Assert.assertEquals(actualTitle, this.destination);
 		searchResultsPage.captureScreenShot("./build/sample-" + destination + ".png");
-		searchResultsPage.scrollTo(scrollToText);
-		searchResultsPage.textParkPlaza.click();
+		//searchResultsPage.scrollTo(scrollToText);
+		//searchResultsPage.textParkPlaza.click();
 	}
 }

@@ -8,6 +8,7 @@ import com.sample.framework.Platform;
 import com.sample.framework.ui.FindBy;
 import com.sample.framework.ui.Page;
 import com.sample.framework.ui.controls.Control;
+import com.sample.framework.ui.controls.DateLabel;
 import com.sample.framework.ui.controls.Edit;
 import com.sample.tests.controls.LocationLookupEdit;
 
@@ -15,6 +16,10 @@ public class SearchPage extends Page {
 	@FindBy(locator = "com.booking:id/search_searchInput", platform = Platform.ANDROID_NATIVE)
 	@FindBy(locator = "ss")
 	public LocationLookupEdit editDestination;
+	@FindBy(locator = "com.booking:id/search_checkinDate", platform = Platform.ANDROID_NATIVE, format = "EEE, MMMM dd")
+	public DateLabel dateCheckin;
+    @FindBy(locator = "com.booking:id/search_checkoutDate", platform = Platform.ANDROID_NATIVE, format = "EEE, MMMM dd")
+    public DateLabel dateCheckout;
 	@FindBy(locator = "//table[@class='c2-month-table']//td[contains(@class, 'c2-day-s-today')]")
 	@FindBy(locator = "xpath=(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]",
 		platform = Platform.ANDROID_NATIVE)

@@ -30,6 +30,7 @@ public class Control {
     private HashMap<String, SubItem> subItemsMap;
     private String scrollTo;
     private ScrollTo scrollDirection;
+    private String format;
   
     public Control(Page parentValue, By locatorValue) {
         this.parent = parentValue;
@@ -69,6 +70,12 @@ public class Control {
     }
     public void setScrollDirection(ScrollTo scrollDirection) {
         this.scrollDirection = scrollDirection;
+    }
+    public String getFormat() {
+        return format;
+    }
+    public void setFormat(String format) {
+        this.format = format;
     }
     public void addSubItems(SubItem[] items) {
         for (SubItem item : items) {
@@ -114,6 +121,9 @@ public class Control {
 				"Unable to find element with locator: " + this.getLocator(),
 				this.exists());
 		return this.element().getText();
+    }
+    public String getValue() {
+        return this.getText();
     }
     public Rectangle getRect() {
         this.exists();
