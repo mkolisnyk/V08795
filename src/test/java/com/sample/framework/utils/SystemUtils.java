@@ -1,11 +1,20 @@
 package com.sample.framework.utils;
 
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.ios.IOSDriver;
+
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
@@ -76,6 +85,21 @@ public final class SystemUtils {
             cmdArray = new String[] {
                     getADBPath(),
                     "uninstall", appId };
+        }
+        runCommand(cmdArray);
+    }
+    public static void openDeepLink(String url) {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+        if (!StringUtils.isBlank(deviceId)) {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "-s", deviceId, "shell", "am", "start",
+                    url };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "shell", "am", "start", url };
         }
         runCommand(cmdArray);
     }

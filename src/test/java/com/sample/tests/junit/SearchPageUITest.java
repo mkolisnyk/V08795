@@ -13,6 +13,7 @@ import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
 import com.sample.framework.ui.PageFactory;
 import com.sample.tests.pages.LandingPage;
+import com.sample.tests.pages.PlayStorePage;
 import com.sample.tests.pages.SearchPage;
 
 public class SearchPageUITest extends TestCommon {
@@ -29,5 +30,8 @@ public class SearchPageUITest extends TestCommon {
         Assert.assertTrue(searchPage.radioBusiness.exists());
         Assert.assertTrue(searchPage.radioLeisure.exists());
         Assert.assertTrue(searchPage.buttonSearch.exists());
+        PlayStorePage playStorePage = new PlayStorePage(Driver.current());
+        playStorePage.navigate();
+        Assert.assertTrue(playStorePage.isCurrent());
     }
 }
