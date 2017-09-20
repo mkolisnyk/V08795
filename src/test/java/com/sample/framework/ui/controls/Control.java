@@ -1,9 +1,14 @@
 package com.sample.framework.ui.controls;
 
+import io.appium.java_client.MobileElement;
+
+import java.awt.Rectangle;
 import java.util.HashMap;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +18,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.sample.framework.Configuration;
 import com.sample.framework.ui.Page;
 import com.sample.framework.ui.PageFactory;
+import com.sample.framework.ui.ScrollTo;
 import com.sample.framework.ui.SubItem;
 
 public class Control {
@@ -22,7 +28,9 @@ public class Control {
     private String locatorText = "";
     private String itemLocatorText = "";
     private HashMap<String, SubItem> subItemsMap;
-    
+    private String scrollTo;
+    private ScrollTo scrollDirection;
+  
     public Control(Page parentValue, By locatorValue) {
         this.parent = parentValue;
         this.locator = locatorValue;
@@ -50,6 +58,18 @@ public class Control {
         this.itemLocatorText = subItemLocatorText;
     }
 
+    public String getScrollTo() {
+        return scrollTo;
+    }
+    public void setScrollTo(String scrollTo) {
+        this.scrollTo = scrollTo;
+    }
+    public ScrollTo getScrollDirection() {
+        return scrollDirection;
+    }
+    public void setScrollDirection(ScrollTo scrollDirection) {
+        this.scrollDirection = scrollDirection;
+    }
     public void addSubItems(SubItem[] items) {
         for (SubItem item : items) {
             this.subItemsMap.put(item.name(), item);
@@ -67,6 +87,7 @@ public class Control {
         return getDriver().findElements(locator).get(index);
     }
     public boolean exists(long timeout) {
+        this.scrollTo();
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -93,5 +114,23 @@ public class Control {
 				"Unable to find element with locator: " + this.getLocator(),
 				this.exists());
 		return this.element().getText();
+    }
+    public Rectangle getRect() {
+        this.exists();
+        Rectangle rect = new Rectangle();
+        Point location = ((MobileElement) this.element()).getCoordinates()
+                .onPage();
+        Dimension size = this.element().getSize();
+        rect.x = location.x;
+        rect.y = location.y;
+        rect.width = size.width;
+        rect.height = size.height;
+        return rect;
+    }
+    public void scrollTo() {
+        if (this.getScrollTo() != null && !this.getScrollTo().trim().equals("")) {
+            this.getParent().scrollTo(this.getScrollTo(),
+                    this.getScrollDirection());
+        }
     }
 }

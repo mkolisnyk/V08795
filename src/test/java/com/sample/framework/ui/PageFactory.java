@@ -69,6 +69,8 @@ public class PageFactory {
                     control.setItemLocatorText(locator.itemLocator());
                     SubItem[] items = field.getAnnotationsByType(SubItem.class);
                     control.addSubItems(getSubItemsForPlatform(items, Configuration.platform()));
+                    control.setScrollTo(locator.scrollTo());
+                    control.setScrollDirection(locator.scrollDirection());
                     field.set(page, control);
                 }
             }

@@ -15,4 +15,6 @@ public @interface FindBy {
     String locator();
     Platform platform() default Platform.ANY;
     String itemLocator() default "";
+    String scrollTo() default "";
+    ScrollTo scrollDirection() default ScrollTo.TOP_BOTTOM;
 }

@@ -36,19 +36,21 @@ public class SampleTest extends TestCommon {
 
 	private String destination;
 	private boolean isBusiness;
+	private String scrollToText;
 	
-	public SampleTest(String destination, boolean isBusiness) {
+	public SampleTest(String destination, boolean isBusiness, String scrollToText) {
 		super();
 		this.destination = destination;
 		this.isBusiness = isBusiness;
+		this.scrollToText = scrollToText;
 	}
 	
 	@Parameters
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(
             new Object[][] {
-            		{"London", true},
-            		{"Manchester", false},
+            		{"Leeds", true, "Hilton Leeds" },
+//            		{"Manchester", false, "Holiday Inn Express"},
             });
     }
 	
@@ -67,5 +69,7 @@ public class SampleTest extends TestCommon {
 		String actualTitle = searchResultsPage.textSubTitle.getText();
 		Assert.assertEquals(actualTitle, this.destination);
 		searchResultsPage.captureScreenShot("./build/sample-" + destination + ".png");
+		searchResultsPage.scrollTo(scrollToText);
+		searchResultsPage.textParkPlaza.click();
 	}
 }
