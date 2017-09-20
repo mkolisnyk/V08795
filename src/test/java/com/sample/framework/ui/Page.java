@@ -5,6 +5,7 @@ import io.appium.java_client.AppiumDriver;
 import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -14,6 +15,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
 
+import com.sample.framework.Configuration;
 import com.sample.framework.Driver;
 import com.sample.framework.ui.controls.Control;
 
@@ -22,6 +24,7 @@ public class Page {
     private static final long SHORT_TIMEOUT = 5;
     private static final int SCROLL_TOP_PART = 9;
     private static final int SCROLL_TOTAL_PARTS = 10;
+    private static final long TIMEOUT = Configuration.timeout();
     private WebDriver driver;
 
     public Page(WebDriver driverValue) {
@@ -190,5 +193,20 @@ public class Page {
             ((AppiumDriver) this.getDriver()).hideKeyboard();
         } catch (Exception e) {
         }
+    }
+    public boolean isCurrent(long timeout) throws Exception {
+        Field[] fields = this.getClass().getFields();
+        for (Field field : fields) {
+            if (Control.class.isAssignableFrom(field.getType())) {
+                Control control = (Control) field.get(this);
+                if (!control.isExcludeFromSearch() && !control.exists(timeout)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    public boolean isCurrent() throws Exception {
+        return isCurrent(TIMEOUT);
     }
 }

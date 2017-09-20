@@ -18,4 +18,5 @@ public @interface FindBy {
     String scrollTo() default "";
     ScrollTo scrollDirection() default ScrollTo.TOP_BOTTOM;
     String format() default "";
+    boolean excludeFromSearch() default false;
 }

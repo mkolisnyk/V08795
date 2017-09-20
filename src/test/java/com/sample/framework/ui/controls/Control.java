@@ -31,6 +31,7 @@ public class Control {
     private String scrollTo;
     private ScrollTo scrollDirection;
     private String format;
+    private boolean excludeFromSearch = false;
   
     public Control(Page parentValue, By locatorValue) {
         this.parent = parentValue;
@@ -77,6 +78,12 @@ public class Control {
     public void setFormat(String format) {
         this.format = format;
     }
+    public boolean isExcludeFromSearch() {
+        return excludeFromSearch;
+    }
+    public void setExcludeFromSearch(boolean excludeFromSearch) {
+        this.excludeFromSearch = excludeFromSearch;
+    }
     public void addSubItems(SubItem[] items) {
         for (SubItem item : items) {
             this.subItemsMap.put(item.name(), item);
@@ -113,8 +120,11 @@ public class Control {
         this.element().click();
     }
     public <T extends Page> T click(Class<T> pageClass) throws Exception {
-	    	this.click();
-	    	return PageFactory.init(this.getDriver(), pageClass);
+    	this.click();
+    	T page = PageFactory.init(this.getDriver(), pageClass);
+    	Assert.assertTrue(String.format("The page of %s class didn't appear during specified timeout", pageClass.getName()),
+                page.isCurrent());
+    	return page;
     }
     public String getText() {
 		Assert.assertTrue(

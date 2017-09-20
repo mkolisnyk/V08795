@@ -22,7 +22,7 @@ public class SearchPage extends Page {
     public DateLabel dateCheckout;
 	@FindBy(locator = "//table[@class='c2-month-table']//td[contains(@class, 'c2-day-s-today')]")
 	@FindBy(locator = "xpath=(//android.widget.TextView[contains(@resource-id, 'calendar_tv') and @enabled='true'])[1]",
-		platform = Platform.ANDROID_NATIVE)
+		platform = Platform.ANDROID_NATIVE, excludeFromSearch = true)
 	public Control buttonTodaysDate;
 	@FindBy(locator = "com.booking:id/business_purpose_business", platform = Platform.ANDROID_NATIVE)
 	@FindBy(locator = "xpath=(//input[@name='sb_travel_purpose'])[2]")
