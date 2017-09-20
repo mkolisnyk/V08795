@@ -56,6 +56,21 @@ public class SampleTest extends TestCommon {
 	
 	@Test
 	public void testSample() throws Exception {
+	    
+	    Assert.assertTrue(searchPage.allElementsExist(
+	            new Control[] {
+	                    searchPage.editDestination,
+	                    searchPage.dateCheckin,
+	                    searchPage.dateCheckout,
+	                    searchPage.buttonSearch
+	            }));
+        Assert.assertTrue(searchPage.anyOfElementsExist(
+                new Control[] {
+                        searchPage.editDestination,
+                        searchPage.dateCheckin,
+                        searchPage.dateCheckout,
+                        searchPage.buttonSearch
+                }));
 		searchPage.editDestination.setText(destination);
 	    
 	    searchPage.buttonTodaysDate.click();

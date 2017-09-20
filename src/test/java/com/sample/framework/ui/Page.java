@@ -209,4 +209,57 @@ public class Page {
     public boolean isCurrent() throws Exception {
         return isCurrent(TIMEOUT);
     }
+    protected boolean allElementsAre(Control[] elements, String state) throws Exception {
+        for (Control element : elements) {
+            if (!(Boolean) (element.getClass().getMethod(state).invoke(element))) {
+                return false;
+            }
+        }
+        return true;
+    }
+    protected boolean anyOfElementsIs(Control[] elements, String state) throws Exception {
+        for (Control element : elements) {
+            if ((Boolean) element.getClass().getMethod(state, long.class).invoke(element, 1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public boolean allElementsExist(Control[] elements) throws Exception {
+        return allElementsAre(elements, "exists");
+    }
+    public boolean allElementsDoNotExist(Control[] elements) throws Exception {
+        return allElementsAre(elements, "disappears");
+    }
+    public boolean allElementsAreVisible(Control[] elements) throws Exception {
+        return allElementsAre(elements, "visible");
+    }
+    public boolean allElementsAreInvisible(Control[] elements) throws Exception {
+        return allElementsAre(elements, "invisible");
+    }
+    public boolean allElementsAreEnabled(Control[] elements) throws Exception {
+        return allElementsAre(elements, "enabled");
+    }
+    public boolean allElementsAreDisabled(Control[] elements) throws Exception {
+        return allElementsAre(elements, "disabled");
+    }
+    
+    public boolean anyOfElementsExist(Control[] elements) throws Exception {
+        return anyOfElementsIs(elements, "exists");
+    }
+    public boolean anyOfElementsDoNotExist(Control[] elements) throws Exception {
+        return anyOfElementsIs(elements, "disappears");
+    }
+    public boolean anyOfElementsIsVisible(Control[] elements) throws Exception {
+        return anyOfElementsIs(elements, "visible");
+    }
+    public boolean anyOfElementsIsInvisible(Control[] elements) throws Exception {
+        return anyOfElementsIs(elements, "invisible");
+    }
+    public boolean anyOfElementsIsEnabled(Control[] elements) throws Exception {
+        return anyOfElementsIs(elements, "enabled");
+    }
+    public boolean anyOfElementsIsDisabled(Control[] elements) throws Exception {
+        return anyOfElementsIs(elements, "disabled");
+    }
 }
