@@ -6,6 +6,7 @@ import io.appium.java_client.ios.IOSDriver;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.ProcessBuilder.Redirect;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -207,7 +208,6 @@ public final class SystemUtils {
         runCommand(cmdArray);
     }
     public static void dumpErrorLog(File outputFile) throws Exception {
-        String[] cmdArray;
         String deviceId = Configuration.get("udid");
 
         ProcessBuilder builder = null;
@@ -223,5 +223,32 @@ public final class SystemUtils {
         boolean status = p.waitFor(Configuration.timeout(), TimeUnit.SECONDS);
         Assert.assertTrue("Process didn't finish during specified timeout", status);
         Assert.assertEquals("Process ended with undexpected value", 0, p.exitValue());
+    }
+    public static List<String> getDisplayActivities() throws Exception {
+        String deviceId = Configuration.get("udid");
+
+        ProcessBuilder builder = null;
+        if (!StringUtils.isBlank(deviceId)) {
+            builder = new ProcessBuilder(getADBPath(), "-s",
+                    deviceId, "logcat", "-d");
+        } else {
+            builder = new ProcessBuilder(getADBPath(), "logcat", "-d");
+        }
+        File outputFile = File.createTempFile("display", "log");
+        outputFile.deleteOnExit();
+        builder.redirectOutput(outputFile );
+        builder.redirectError(outputFile);
+        Process p = builder.start();
+        boolean status = p.waitFor(Configuration.timeout(), TimeUnit.SECONDS);
+        Assert.assertTrue("Process didn't finish during specified timeout", status);
+        Assert.assertEquals("Process ended with undexpected value", 0, p.exitValue());
+        List<String> lines = FileUtils.readLines(outputFile);
+        for (int i = 0; i < lines.size(); i++) {
+            if (!lines.get(i).contains("ActivityManager: Displayed")) {
+                lines.remove(i);
+                i--;
+            }
+        }
+        return lines;
     }
 }
