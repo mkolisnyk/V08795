@@ -4,14 +4,18 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -185,5 +189,39 @@ public final class SystemUtils {
                     "shell", "am", "force-stop", "--user", "all", packageName };
         }
         runCommand(cmdArray);
+    }
+    public static void clearLogs() {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+        if (!StringUtils.isBlank(deviceId)) {
+            cmdArray = new String[] {
+                    getADBPath(), "-s",
+                    deviceId, "logcat", "-c"
+            };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "logcat", "-c"
+            };
+        }
+        runCommand(cmdArray);
+    }
+    public static void dumpErrorLog(File outputFile) throws Exception {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+
+        ProcessBuilder builder = null;
+        if (!StringUtils.isBlank(deviceId)) {
+            builder = new ProcessBuilder(getADBPath(), "-s",
+                    deviceId, "logcat", "-d", "*:E");
+        } else {
+            builder = new ProcessBuilder(getADBPath(), "logcat", "-d", "*:E");
+        }
+        builder.redirectOutput(outputFile);
+        builder.redirectError(outputFile);
+        Process p = builder.start();
+        boolean status = p.waitFor(Configuration.timeout(), TimeUnit.SECONDS);
+        Assert.assertTrue("Process didn't finish during specified timeout", status);
+        Assert.assertEquals("Process ended with undexpected value", 0, p.exitValue());
     }
 }

@@ -40,6 +40,13 @@ public final class Configuration {
     	}
 	}
 	public static String get(String option) {
+	    if (properties == null) {
+	        try {
+                load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+	    }
 		String value = properties.getProperty(option);
 		if (value == null) {
 			return "";
