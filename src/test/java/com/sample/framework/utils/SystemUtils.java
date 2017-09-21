@@ -155,4 +155,35 @@ public final class SystemUtils {
         }
         runCommand(cmdArray);
     }
+    public static void startApp(String packageName, String activityName) {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+        if (!StringUtils.isBlank(deviceId)) {
+            cmdArray = new String[] {
+                    getADBPath(), "-s",
+                    deviceId, "shell", "am", "start", "-n",
+                    packageName + "/" + activityName };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "shell", "am", "start", "-n",
+                    packageName + "/" + activityName };
+        }
+        runCommand(cmdArray);
+    }
+    public static void forceStop(String packageName) {
+        String[] cmdArray;
+        String deviceId = Configuration.get("udid");
+        if (!StringUtils.isBlank(deviceId)) {
+            cmdArray = new String[] {
+                    getADBPath(), "-s",
+                    deviceId, "shell", "am", "force-stop",
+                    "--user", "all", packageName };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "shell", "am", "force-stop", "--user", "all", packageName };
+        }
+        runCommand(cmdArray);
+    }
 }
