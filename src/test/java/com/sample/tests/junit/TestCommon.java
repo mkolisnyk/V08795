@@ -25,13 +25,15 @@ import com.sample.tests.pages.SearchPage;
 
 public class TestCommon {
     public SearchPage searchPage;
+    public static Process process;
 
 	public TestCommon() {
 		// TODO Auto-generated constructor stub
 	}
     @BeforeClass
-    public static void beforeSuite() throws IOException {
+    public static void beforeSuite() throws Exception {
         AppHelper.uninstallApp();
+        process = SystemUtils.startProcessMetricsCommand(new File("output.txt"));
     }
     public void setUp(boolean reset) throws Exception {
         this.searchPage = AppHelper.startApp(reset);
@@ -43,6 +45,7 @@ public class TestCommon {
 	@After
 	public void tearDown() {
 		AppHelper.stopApp();
+		TestCommon.process.destroy();
 	}
 
 }

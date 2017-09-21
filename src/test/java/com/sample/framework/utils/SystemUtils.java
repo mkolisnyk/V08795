@@ -251,4 +251,20 @@ public final class SystemUtils {
         }
         return lines;
     }
+    public static Process startProcessMetricsCommand(File outputFile) throws Exception {
+        String deviceId = Configuration.get("udid");
+        ProcessBuilder builder = null;
+        if (!StringUtils.isBlank(deviceId)) {
+            builder = new ProcessBuilder(getADBPath(), "-s",
+                    deviceId,
+                    "shell", "top", "-m", "10", "-d", "5 | grep " + Configuration.get("appPackage"));
+        } else {
+            builder = new ProcessBuilder(getADBPath(),
+                    "shell", "top", "-m", "10", "-d", "5 | grep " + Configuration.get("appPackage"));
+        }
+        builder.redirectOutput(outputFile);
+        builder.redirectError(outputFile);
+        Process p = builder.start();
+        return p;
+    }
 }
