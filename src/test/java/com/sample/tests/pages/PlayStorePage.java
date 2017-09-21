@@ -2,10 +2,13 @@ package com.sample.tests.pages;
 
 import java.io.UnsupportedEncodingException;
 
+import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 
+import com.sample.framework.Configuration;
 import com.sample.framework.ui.FindBy;
 import com.sample.framework.ui.Page;
+import com.sample.framework.ui.PageFactory;
 import com.sample.framework.ui.controls.Control;
 import com.sample.framework.utils.SystemUtils;
 
@@ -34,7 +37,22 @@ public class PlayStorePage extends Page {
 
     @Override
     public Page navigate() {
-        SystemUtils.openDeepLink("market://details?id=com.thetrainline");
+        SystemUtils.openDeepLink("market://details?id=" + Configuration.get("appPackage"));
         return this;
+    }
+    public LandingPage installApp() throws Exception {
+        this.navigate();
+        Control ok = this.getTextControl("OK");
+        if (ok.exists(3)) {
+            ok.click();
+        }
+        this.buttonInstall.click();
+        if (buttonAccept.exists(1)) {
+            this.buttonAccept.click();
+        }
+        Assert.assertTrue("Installation didn't complete within specified timeout",
+                this.buttonOpen.exists(Configuration.timeout() * 2));
+        LandingPage landingPage = this.buttonOpen.click(LandingPage.class);
+        return landingPage;
     }
 }

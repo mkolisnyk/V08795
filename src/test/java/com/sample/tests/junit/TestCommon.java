@@ -30,14 +30,16 @@ public class TestCommon {
 	}
     @BeforeClass
     public static void beforeSuite() throws IOException {
+        System.out.println("Before class");
         Configuration.load();
         if (Configuration.platform().isAndroidNative()) {
+            System.out.println("Uninstall app");
             SystemUtils.uninstallApp(Configuration.get("appPackage"));
+            System.out.println("Done");
         }
     }
-	@Before
-	public void setUp() throws Exception {
-		Configuration.load();
+    public void setUp(boolean reset) throws Exception {
+        Configuration.load();
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability(CapabilityType.BROWSER_NAME, Configuration.get("browser"));
         cap.setCapability("platformVersion", Configuration.get("platformVersion"));
@@ -46,15 +48,15 @@ public class TestCommon {
         //cap.setCapability("udid", Configuration.get("udid"));
         cap.setCapability("deviceName", Configuration.get("deviceName"));
         cap.setCapability("commandTimeout", Configuration.get("commandTimeout"));
-        cap.setCapability("appActivity", Configuration.get("appActivity"));
-        cap.setCapability("appPackage", Configuration.get("appPackage"));
+        //cap.setCapability("appActivity", Configuration.get("appActivity"));
+        //cap.setCapability("appPackage", Configuration.get("appPackage"));
         cap.setCapability("appWaitActivity", Configuration.get("appActivity"));
         cap.setCapability("appWaitPackage", Configuration.get("appPackage"));
         cap.setCapability("fullReset", false);
         cap.setCapability("noReset", true);
         cap.setCapability("fullReset", false);
         cap.setCapability("dontStopAppOnReset", true);
-        if (Configuration.platform().isAndroidNative()) {
+        if (Configuration.platform().isAndroidNative() && reset) {
             SystemUtils.setSystemTime();
             SystemUtils.resetAppData();
         }
@@ -62,14 +64,18 @@ public class TestCommon {
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         Driver.add(driver);
         if (Configuration.platform().isWeb()) {
-        		Driver.current().get(Configuration.get("url"));
+                Driver.current().get(Configuration.get("url"));
         }
-		if (Configuration.platform().isWeb()) {
-			searchPage = PageFactory.init(Driver.current(), SearchPage.class);
-		} else {
-		    LandingPage landingPage = PageFactory.init(Driver.current(), LandingPage.class);
-		    searchPage = landingPage.buttonStartSearch.click(SearchPage.class);
-		}
+        if (Configuration.platform().isWeb()) {
+            searchPage = PageFactory.init(Driver.current(), SearchPage.class);
+        } else {
+            LandingPage landingPage = PageFactory.init(Driver.current(), LandingPage.class);
+            searchPage = landingPage.buttonStartSearch.click(SearchPage.class);
+        }
+    }
+	@Before
+	public void setUp() throws Exception {
+		setUp(true);
 	}
 	@After
 	public void tearDown() {

@@ -27,6 +27,7 @@ public final class SystemUtils {
 
     private static void runCommand(String[] cmdArray) {
         try {
+            System.out.println("Running command: \"" + StringUtils.join(cmdArray, "\" \"") + "\"");
             Runtime.getRuntime().exec(cmdArray).waitFor(3, TimeUnit.MINUTES);
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,6 +139,19 @@ public final class SystemUtils {
                     getADBPath(),
                     "shell", "am", "kill", "--user", "all",
                     Configuration.get("appPackage") };
+        }
+        runCommand(cmdArray);
+    }
+    public static void updateApp(String appPath) {
+        String[] cmdArray;
+        if (!StringUtils.isBlank(Configuration.get("udid"))) {
+            cmdArray = new String[] {
+                    getADBPath(), "-s",
+                    Configuration.get("udid"), "install", "-r", "-d", appPath };
+        } else {
+            cmdArray = new String[] {
+                    getADBPath(),
+                    "install", "-r", "-d", appPath };
         }
         runCommand(cmdArray);
     }
