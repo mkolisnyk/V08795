@@ -19,12 +19,13 @@ public class AppHelper {
 
     public static SearchPage startApp(boolean reset) throws Exception {
         Configuration.load();
+        Configuration.print();
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability(CapabilityType.BROWSER_NAME, Configuration.get("browser"));
         cap.setCapability("platformVersion", Configuration.get("platformVersion"));
         cap.setCapability("platformName", "Android");
         cap.setCapability("app", new File(Configuration.get("app_path")).getAbsolutePath());
-        //cap.setCapability("udid", Configuration.get("udid"));
+        cap.setCapability("udid", Configuration.get("udid"));
         cap.setCapability("deviceName", Configuration.get("deviceName"));
         cap.setCapability("commandTimeout", Configuration.get("commandTimeout"));
         //cap.setCapability("appActivity", Configuration.get("appActivity"));
@@ -39,7 +40,8 @@ public class AppHelper {
             SystemUtils.setSystemTime();
             SystemUtils.resetAppData();
         }
-        WebDriver driver = Driver.init(Configuration.get("driver_url"), Configuration.platform(), cap);
+        WebDriver driver = Driver.init("http://127.0.0.1:" + Configuration.get("port") + "/wd/hub",
+                Configuration.platform(), cap);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         Driver.add(driver);
         if (Configuration.platform().isWeb()) {

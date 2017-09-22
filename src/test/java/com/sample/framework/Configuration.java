@@ -38,6 +38,12 @@ public final class Configuration {
     		is.close();
     	    reader.close();
     	}
+    	for (Entry<Object, Object> entry : System.getProperties().entrySet()) {
+    	    properties.put((String) entry.getKey(), (String) entry.getValue());
+        }
+        for (Entry<String, String> entry : System.getenv().entrySet()) {
+            properties.put((String) entry.getKey(), (String) entry.getValue());
+        }
 	}
 	public static String get(String option) {
 	    if (properties == null) {
@@ -47,7 +53,18 @@ public final class Configuration {
                 e.printStackTrace();
             }
 	    }
-		String value = properties.getProperty(option);
+	    String prefix = "";
+	    String value = "";
+	    if (properties.containsKey("prefix")) {
+	        prefix = (String) properties.get("prefix");
+	    }
+	    if (StringUtils.isNotBlank(prefix)) {
+	        value = properties.getProperty(prefix + "_" + option);
+	        if (value != null) {
+	            return value;
+	        }
+	    }
+	    value = properties.getProperty(option);
 		if (value == null) {
 			return "";
 		}
